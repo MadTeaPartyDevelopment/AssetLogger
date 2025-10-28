@@ -3,32 +3,34 @@
 
 using namespace std;
 
-void Input::SetTextColor()
-{
-	Console::SetForegroundColor(Cyan);
-}
 
-string Input::GetString(string message)
+string Input::GetString(string message, ConsoleColor newColor)
 {
+	Console::SetForegroundColor(newColor);
 	cout << "\n" << message << " ";
 	string usersInput;
+	Console::SetForegroundColor(Green);
 	getline(cin, usersInput);
 	return usersInput;
 }
 
-int Input::GetInteger(string message, int min, int max)
+int Input::GetInteger(string message, int min, int max, ConsoleColor newColor)
 {
+	Console::SetForegroundColor(newColor);
 	int number = 0;
 	while (true)
 	{
 		cout << "\n" << message;
+		Console::SetForegroundColor(Green);
 		if (cin >> number && number >= min && number <= max)
 		{
 			ClearInputBuffer();
 			break;
 		}
 		ClearInputBuffer();
+		Console::SetForegroundColor(Red);
 		cout << "\nInvalid number.\n";
+		Console::SetForegroundColor(Yellow);
 	}
 	return number;
 }

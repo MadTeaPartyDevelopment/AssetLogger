@@ -124,10 +124,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetLogger.cpp" />
+    <ClCompile Include="AssetLogging.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetLogging.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="Input.h" />
   </ItemGroup>

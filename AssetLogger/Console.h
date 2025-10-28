@@ -13,6 +13,7 @@ enum ConsoleColor
     Magenta,
     Cyan,
     White,
+    LightGrey = 60,
     Default = 9
 };
 
