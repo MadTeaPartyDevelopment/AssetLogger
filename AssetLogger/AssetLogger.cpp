@@ -9,6 +9,7 @@
 #include <windows.h>
 #include <cwchar>
 #include <fstream>
+#include <cstdlib>
 #include <sstream>
 
 #include "Console.h"
@@ -27,6 +28,7 @@ int main()
 	AssetLogger.ShowLicense();
 	AssetLogger.Prompt();
 	int switchVal = Input::GetInteger("Answer: ", 1, 2, White);
+
 	if (switchVal == 1)
 	{
 		AssetLogger.HandleAssetAdding();

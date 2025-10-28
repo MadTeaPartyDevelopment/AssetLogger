@@ -18,13 +18,15 @@ class AssetLogging
 protected:
 	bool Demo = false;
 	vector<string> assets = {"Platform,Location(in Game),Use(in Game),Asset Name(on Platform),Asset Maker(on Platform),License Type"};
+
+	int OpenChances = 3;
+	int NewChances = 3;
 public:
 
 AssetLogging()
 {
-	Demo = false;
+	Demo;
 	assets;
-
 }
 void SetConsoleFontSize(int sizeY, const wchar_t* fontName = L"Consolas") {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -55,30 +57,54 @@ static void ShowLicense()
 
 void Prompt()
 {
-	SetConsoleFontSize(18);
-	Console::SetBackgroundColor(White);
-	Console::SetForegroundColor(Black);
-	cout << "-----Options-----" << endl;
-	Console::SetBackgroundColor(Black);
+	if (Demo)
+	{
+		SetConsoleFontSize(18);
+		Console::SetBackgroundColor(White);
+		Console::SetForegroundColor(Black);
+		cout << "-----Options-----" << endl;
+		Console::SetBackgroundColor(Black);
 
-	cout << endl;
-	
-	
-	Console::SetForegroundColor(LightGrey);
-	cout << "1:";
-	Console::SetForegroundColor(White);
-	cout << " New" << endl;
-	
+		cout << endl;
 
-	Console::SetForegroundColor(LightGrey);
-	cout << "2:";
-	Console::SetForegroundColor(White);
-	cout << " Update";
+
+		Console::SetForegroundColor(LightGrey);
+		cout << "1:";
+		Console::SetForegroundColor(White);
+		cout << " New" << endl;
+	}
+	else
+	{
+		SetConsoleFontSize(18);
+		Console::SetBackgroundColor(White);
+		Console::SetForegroundColor(Black);
+		cout << "-----Options-----" << endl;
+		Console::SetBackgroundColor(Black);
+
+		cout << endl;
+
+
+		Console::SetForegroundColor(LightGrey);
+		cout << "1:";
+		Console::SetForegroundColor(White);
+		cout << " New" << endl;
+
+
+		Console::SetForegroundColor(LightGrey);
+		cout << "2:";
+		Console::SetForegroundColor(White);
+		cout << " Update";
+	}
 }
 
 string MakeAssetInfo(string platform, string assetLocation, string assetUse, string assetName, string assetMaker, string licenseType, char delimiter)
 {
-	return platform + delimiter + assetLocation + delimiter + assetUse + delimiter + assetName + delimiter + assetMaker + delimiter + licenseType + "\n";
+	if (Demo)
+	{
+		return platform + delimiter + assetUse + delimiter + assetMaker + "\n";
+	}
+	else{ return platform + delimiter + assetLocation + delimiter + assetUse + delimiter + assetName + delimiter + assetMaker + delimiter + licenseType + "\n"; }
+	
 }
 
 void AddAssetInfo(string assetInfo, vector<string>& assets)
@@ -88,35 +114,17 @@ void AddAssetInfo(string assetInfo, vector<string>& assets)
 
 void UpdateAsset(size_t index, vector<string>& assets)
 {
-
-	string platform = Input::GetString("Platform: ", White);
-	string assetLocation = Input::GetString("Asset Location(in Game): ", White);
-	string assetUse = Input::GetString("Asset Use(in Game): ", White);
-	string assetName = Input::GetString("Asset Name(on Platform): ", White);
-	string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
-	string licenseType = Input::GetString("License Type: ", White);
-
-	Console::SetForegroundColor(White);
-	cout << "\nDo you want me to read it back to you?\n";
-
-	Console::SetForegroundColor(LightGrey);
-	cout << "1:";
-	Console::SetForegroundColor(White);
-	cout << " Yes\n";
-
-	Console::SetForegroundColor(LightGrey);
-	cout << "2:";
-	Console::SetForegroundColor(Red);
-	cout << " No\n\n";
-
-	int readBack = Input::GetInteger("Answer: ", 1, 2, LightGrey);
-	if (readBack == 1)
+	if (!Demo)
 	{
-
-		cout << platform << ',' << assetLocation << ',' << assetUse << ',' << assetName << ',' << assetMaker << endl << endl;
+		string platform = Input::GetString("Platform: ", White);
+		string assetLocation = Input::GetString("Asset Location(in Game): ", White);
+		string assetUse = Input::GetString("Asset Use(in Game): ", White);
+		string assetName = Input::GetString("Asset Name(on Platform): ", White);
+		string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
+		string licenseType = Input::GetString("License Type: ", White);
 
 		Console::SetForegroundColor(White);
-		cout << "\nIs this correct?\n";
+		cout << "\nDo you want me to read it back to you?\n";
 
 		Console::SetForegroundColor(LightGrey);
 		cout << "1:";
@@ -127,11 +135,14 @@ void UpdateAsset(size_t index, vector<string>& assets)
 		cout << "2:";
 		Console::SetForegroundColor(Red);
 		cout << " No\n\n";
-		int correct = Input::GetInteger("Answer:  ", 1, 2, LightGrey);
-		if (correct == 1)
+
+		int readBack = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+		if (readBack == 1)
 		{
+			cout << platform << ',' << assetLocation << ',' << assetUse << ',' << assetName << ',' << assetMaker << ',' << licenseType << endl << endl;
+
 			Console::SetForegroundColor(White);
-			cout << "\nDo you have more you want to Update?\n";
+			cout << "\nIs this correct?\n";
 
 			Console::SetForegroundColor(LightGrey);
 			cout << "1:";
@@ -142,48 +153,11 @@ void UpdateAsset(size_t index, vector<string>& assets)
 			cout << "2:";
 			Console::SetForegroundColor(Red);
 			cout << " No\n\n";
-
-			int doUpdate = Input::GetInteger("Answer: ", 1, 2, LightGrey);
-
-			if (doUpdate == 1)
+			int correct = Input::GetInteger("Answer:  ", 1, 2, LightGrey);
+			if (correct == 1)
 			{
-				UpdateAsset(index, assets);
-			}
-			else
-			{
-				assets[index] = MakeAssetInfo(platform, assetLocation, assetUse, assetName, assetMaker, licenseType, ',');
-				SaveAssetInfo(assets, Input::GetString("File Name: ", White) + ".csv");
-			}
-		}
-		else
-		{
-			Console::SetForegroundColor(White);
-			cout << "I'm so sorry to hear that!" << endl
-				<< endl;
-
-			Console::SetForegroundColor(White);
-			cout << "\nDo you want to try again?\n\n";
-
-			Console::SetForegroundColor(LightGrey);
-			cout << "1:";
-			Console::SetForegroundColor(White);
-			cout << " Yes\n";
-
-			Console::SetForegroundColor(LightGrey);
-			cout << "2:";
-			Console::SetForegroundColor(Red);
-			cout << " No\n\n";
-
-			int updateAgain = Input::GetInteger("Answer: ", 1, 2, LightGrey);
-
-			if (updateAgain == 1)
-			{
-				UpdateAsset(index, assets);
-			}
-			else
-			{
-				Console::SetForegroundColor(Yellow);
-				cout << "\nAre you sure?\n This would abandon ship!\n\n";
+				Console::SetForegroundColor(White);
+				cout << "\nDo you have more you want to Update?\n";
 
 				Console::SetForegroundColor(LightGrey);
 				cout << "1:";
@@ -195,20 +169,198 @@ void UpdateAsset(size_t index, vector<string>& assets)
 				Console::SetForegroundColor(Red);
 				cout << " No\n\n";
 
-				int sure = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+				int doUpdate = Input::GetInteger("Answer: ", 1, 2, LightGrey);
 
-				if (sure == 1)
+				if (doUpdate == 1)
 				{
 					UpdateAsset(index, assets);
 				}
 				else
 				{
+					assets[index] = MakeAssetInfo(platform, assetLocation, assetUse, assetName, assetMaker, licenseType, ',');
 					SaveAssetInfo(assets, Input::GetString("File Name: ", White) + ".csv");
 				}
 			}
+			else
+			{
+				Console::SetForegroundColor(White);
+				cout << "I'm so sorry to hear that!" << endl
+					<< endl;
 
+				Console::SetForegroundColor(White);
+				cout << "\nDo you want to try again?\n\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "1:";
+				Console::SetForegroundColor(White);
+				cout << " Yes\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "2:";
+				Console::SetForegroundColor(Red);
+				cout << " No\n\n";
+
+				int updateAgain = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+
+				if (updateAgain == 1)
+				{
+					UpdateAsset(index, assets);
+				}
+				else
+				{
+					Console::SetForegroundColor(Yellow);
+					cout << "\nAre you sure?\n This would abandon ship!\n\n";
+
+					Console::SetForegroundColor(LightGrey);
+					cout << "1:";
+					Console::SetForegroundColor(White);
+					cout << " Yes\n";
+
+					Console::SetForegroundColor(LightGrey);
+					cout << "2:";
+					Console::SetForegroundColor(Red);
+					cout << " No\n\n";
+
+					int sure = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+
+					if (sure == 1)
+					{
+						UpdateAsset(index, assets);
+					}
+					else
+					{
+						SaveAssetInfo(assets, Input::GetString("File Name: ", White) + ".csv");
+					}
+				}
+
+			}
 		}
 	}
+
+	else
+	{
+		string platform = Input::GetString("Platform: ", White);
+
+		string assetUse = Input::GetString("Asset Use(in Game): ", White);
+		
+		string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
+
+
+		Console::SetForegroundColor(White);
+		cout << "\nDo you want me to read it back to you?\n";
+
+		Console::SetForegroundColor(LightGrey);
+		cout << "1:";
+		Console::SetForegroundColor(White);
+		cout << " Yes\n";
+
+		Console::SetForegroundColor(LightGrey);
+		cout << "2:";
+		Console::SetForegroundColor(Red);
+		cout << " No\n\n";
+
+		int readBack = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+		if (readBack == 1)
+		{
+			cout << platform << ',' << assetUse << ',' << assetMaker << endl << endl;
+
+			Console::SetForegroundColor(White);
+			cout << "\nIs this correct?\n";
+
+			Console::SetForegroundColor(LightGrey);
+			cout << "1:";
+			Console::SetForegroundColor(White);
+			cout << " Yes\n";
+
+			Console::SetForegroundColor(LightGrey);
+			cout << "2:";
+			Console::SetForegroundColor(Red);
+			cout << " No\n\n";
+			int correct = Input::GetInteger("Answer:  ", 1, 2, LightGrey);
+			if (correct == 1)
+			{
+				Console::SetForegroundColor(White);
+				cout << "\nDo you have more you want to Update?\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "1:";
+				Console::SetForegroundColor(White);
+				cout << " Yes\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "2:";
+				Console::SetForegroundColor(Red);
+				cout << " No\n\n";
+
+				int doUpdate = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+
+				if (doUpdate == 1)
+				{
+					UpdateAsset(index, assets);
+				}
+				else
+				{
+					assets[index] = MakeAssetInfo(platform, "Full Version Only", assetUse, "Full Version Only", assetMaker, "Full Version Only", ',');
+					SaveAssetInfo(assets, Input::GetString("File Name: ", White) + ".csv");
+				}
+			}
+			else
+			{
+				Console::SetForegroundColor(White);
+				cout << "I'm so sorry to hear that!" << endl
+					<< endl;
+
+				Console::SetForegroundColor(White);
+				cout << "\nDo you want to try again?\n\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "1:";
+				Console::SetForegroundColor(White);
+				cout << " Yes\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "2:";
+				Console::SetForegroundColor(Red);
+				cout << " No\n\n";
+
+				int updateAgain = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+
+				if (updateAgain == 1)
+				{
+					UpdateAsset(index, assets);
+				}
+				else
+				{
+					Console::SetForegroundColor(Yellow);
+					cout << "\nAre you sure?\n This would abandon ship!\n\n";
+
+					Console::SetForegroundColor(LightGrey);
+					cout << "1:";
+					Console::SetForegroundColor(White);
+					cout << " Yes\n";
+
+					Console::SetForegroundColor(LightGrey);
+					cout << "2:";
+					Console::SetForegroundColor(Red);
+					cout << " No\n\n";
+
+					int sure = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+
+					if (sure == 1)
+					{
+						UpdateAsset(index, assets);
+					}
+					else
+					{
+						SaveAssetInfo(assets, Input::GetString("File Name: ", White) + ".csv");
+					}
+				}
+
+			}
+		}
+	}
+
+	
 }
 
 void UpdateAssets(vector<string>& assets, string fileName)
@@ -264,7 +416,9 @@ void UpdateAssets(vector<string>& assets, string fileName)
 
 void SaveAssetInfo(vector<string>& assets, string fileName)
 {
-	ifstream newFile(fileName);
+	if (!Demo)
+	{
+		ifstream newFile(fileName);
 	string line;
 	if (newFile.is_open())
 	{
@@ -364,19 +518,128 @@ void SaveAssetInfo(vector<string>& assets, string fileName)
 				else { cout << "-----CODE-BROKEN-----"; }
 			}
 		}
+	} else{}
 	}
+
 	else
 	{
-		if (!newFile.eof())
-		{
-			ofstream file(fileName);
-			for (auto& asset : assets)
+
+			ifstream newFile(fileName);
+			string line;
+			if (newFile.is_open())
 			{
-				file << asset;
+				Console::SetForegroundColor(Yellow);
+				cout << "\nFile Already Exists\n" << endl;
+
+				Console::SetForegroundColor(White);
+				cout << "\nDo you want to overwrite it?\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "1:";
+				Console::SetForegroundColor(White);
+				cout << " Yes\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "2:";
+				Console::SetForegroundColor(Red);
+				cout << " No\n\n";
+				int doOverwrite = Input::GetInteger("Answer:  ", 1, 2, LightGrey);
+
+				if (doOverwrite == 1)
+				{
+					if (!newFile.eof())
+					{
+						ofstream file(fileName);
+						for (auto& asset : assets)
+						{
+							file << asset;
+						}
+						file.close();
+					}
+				}
+				else
+				{
+					Console::SetForegroundColor(White);
+					cout << "\nDo you want to update it?\n";
+
+					Console::SetForegroundColor(LightGrey);
+					cout << "1:";
+					Console::SetForegroundColor(White);
+					cout << " Yes\n";
+
+					Console::SetForegroundColor(LightGrey);
+					cout << "2:";
+					Console::SetForegroundColor(Red);
+					cout << " No\n\n";
+					int doUpdate = Input::GetInteger("Answer:  ", 1, 2, LightGrey);
+
+					if (doUpdate == 1)
+					{
+						ifstream newFile(fileName);
+						string line;
+						while (!newFile.eof())
+						{
+							getline(newFile, line);
+
+							string assetInfo;
+							stringstream assetList(line);
+
+							size_t index = 0;
+							while (getline(assetList, assetInfo, '|'))
+							{
+								if (assets.size() <= index)
+								{
+									assets[index] = assetInfo;
+									index++;
+								}
+								else
+								{
+									assets.push_back(assetInfo);
+								}
+							}
+						}
+
+						newFile.close();
+
+						if (!assets.empty())
+						{
+							cout << "\n \n \n";
+							Console::SetBackgroundColor(White);
+							Console::SetForegroundColor(Black);
+							cout << "------Results------";
+							Console::SetBackgroundColor(Black);
+							Console::SetForegroundColor(White);
+							cout << "\n \n";
+							for (auto& asset : assets)
+							{
+								cout << asset << endl;
+							}
+
+							Console::SetForegroundColor(White);
+							cout << "\nWhich one is the problem?\n\n";
+							size_t problemIndex = Input::GetInteger("Answer:  ", 0, assets.size(), LightGrey) - 1;
+
+							UpdateAsset(problemIndex, assets);
+						}
+						else { cout << "-----CODE-BROKEN-----"; }
+					}
+				}
 			}
-			file.close();
-		}
+			else
+			{
+				if (!newFile.eof())
+				{
+					ofstream file(fileName);
+					for (auto& asset : assets)
+					{
+						file << asset;
+					}
+					file.close();
+				}
+			}
 	}
+
+	
 }
 
 	void ReadBack()
@@ -439,41 +702,22 @@ void SaveAssetInfo(vector<string>& assets, string fileName)
 
 	void HandleAssetAdding()
 	{
-		string platform = Input::GetString("Platform: ", White);
-		string assetLocation = Input::GetString("Asset Location(in Game): ", White);
-		string assetUse = Input::GetString("Asset Use(in Game): ", White);
-		string assetName = Input::GetString("Asset Name(on Platform): ", White);
-		string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
-		string licenseType = Input::GetString("License Type: ", White);
-
-		Console::SetForegroundColor(White);
-
-		AddAssetInfo(MakeAssetInfo(platform, assetLocation, assetUse, assetName, assetMaker, licenseType, ','), assets);
-
-
-		Console::SetForegroundColor(White);
-		cout << "\nDo you have more Assets?\n";
-
-		Console::SetForegroundColor(LightGrey);
-		cout << "1:";
-		Console::SetForegroundColor(White);
-		cout << " Yes\n";
-
-		Console::SetForegroundColor(LightGrey);
-		cout << "2:";
-		Console::SetForegroundColor(Red);
-		cout << " No\n\n";
-
-		int moreToAdd = Input::GetInteger("Answer: ", 1, 2, LightGrey);
-
-		if (moreToAdd == 1)
+		if (!Demo)
 		{
-			HandleAssetAdding();
-		}
-		else
-		{
+			string platform = Input::GetString("Platform: ", White);
+			string assetLocation = Input::GetString("Asset Location(in Game): ", White);
+			string assetUse = Input::GetString("Asset Use(in Game): ", White);
+			string assetName = Input::GetString("Asset Name(on Platform): ", White);
+			string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
+			string licenseType = Input::GetString("License Type: ", White);
+
 			Console::SetForegroundColor(White);
-			cout << "\nDo you want me to read it back to you?\n";
+
+			AddAssetInfo(MakeAssetInfo(platform, assetLocation, assetUse, assetName, assetMaker, licenseType, ','), assets);
+
+
+			Console::SetForegroundColor(White);
+			cout << "\nDo you have more Assets?\n";
 
 			Console::SetForegroundColor(LightGrey);
 			cout << "1:";
@@ -485,16 +729,99 @@ void SaveAssetInfo(vector<string>& assets, string fileName)
 			Console::SetForegroundColor(Red);
 			cout << " No\n\n";
 
-			int readBack = Input::GetInteger("Answer: ", 1, 2, LightGrey);
-			if (readBack == 1)
+			int moreToAdd = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+
+			if (moreToAdd == 1)
 			{
-				ReadBack();
+				HandleAssetAdding();
 			}
 			else
 			{
-				SaveCheck();
+				Console::SetForegroundColor(White);
+				cout << "\nDo you want me to read it back to you?\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "1:";
+				Console::SetForegroundColor(White);
+				cout << " Yes\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "2:";
+				Console::SetForegroundColor(Red);
+				cout << " No\n\n";
+
+				int readBack = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+				if (readBack == 1)
+				{
+					ReadBack();
+				}
+				else
+				{
+					SaveCheck();
+				}
 			}
 		}
+
+		else
+		{
+			string platform = Input::GetString("Platform: ", White);
+
+			string assetUse = Input::GetString("Asset Use(in Game): ", White);
+
+			string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
+
+
+			Console::SetForegroundColor(White);
+
+			AddAssetInfo(MakeAssetInfo(platform, "Full Version Only", assetUse, "Full Version Only", assetMaker, "Full Version Only", ','), assets);
+
+
+			Console::SetForegroundColor(White);
+			cout << "\nDo you have more Assets?\n";
+
+			Console::SetForegroundColor(LightGrey);
+			cout << "1:";
+			Console::SetForegroundColor(White);
+			cout << " Yes\n";
+
+			Console::SetForegroundColor(LightGrey);
+			cout << "2:";
+			Console::SetForegroundColor(Red);
+			cout << " No\n\n";
+
+			int moreToAdd = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+
+			if (moreToAdd == 1)
+			{
+				HandleAssetAdding();
+			}
+			else
+			{
+				Console::SetForegroundColor(White);
+				cout << "\nDo you want me to read it back to you?\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "1:";
+				Console::SetForegroundColor(White);
+				cout << " Yes\n";
+
+				Console::SetForegroundColor(LightGrey);
+				cout << "2:";
+				Console::SetForegroundColor(Red);
+				cout << " No\n\n";
+
+				int readBack = Input::GetInteger("Answer: ", 1, 2, LightGrey);
+				if (readBack == 1)
+				{
+					ReadBack();
+				}
+				else
+				{
+					SaveCheck();
+				}
+			}
+		}
+		
 	}
 
 	void SaveCheck()
@@ -544,4 +871,6 @@ void SaveAssetInfo(vector<string>& assets, string fileName)
 
 		}
 	}
+
+
 };
