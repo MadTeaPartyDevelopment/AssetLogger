@@ -5,6 +5,7 @@
 //Demo version provided for evaluation only. Full version available at [Link To Be Added].
 
 #include <iostream>
+#include "Console.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ static void ForceInteractionToContinue()
 
 static void ShowLicense()
 {
+	Console::SetForegroundColor(Yellow);
 	cout << "Copyright © Mad Tea Party Development 2025" << endl
 		<< endl
 		<< "This software is proprietary and may not be" << endl
@@ -27,8 +29,6 @@ static void ShowLicense()
 }
 
 bool Demo = false;
-
-
 
 int main()
 {
