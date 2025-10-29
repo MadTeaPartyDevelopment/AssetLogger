@@ -132,6 +132,13 @@
     <ClInclude Include="AssetLogging.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AssetLogger.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="AssetLoggerIcon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
