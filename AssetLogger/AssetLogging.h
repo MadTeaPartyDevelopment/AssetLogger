@@ -6,6 +6,8 @@
 #include <fstream>
 #include <sstream>
 
+
+
 #include "Console.h"
 #include "Input.h"
 
@@ -17,7 +19,7 @@ class AssetLogging
 {
 protected:
 	bool Demo = false;
-	vector<string> assets = {"Platform,Location(in Game),Use(in Game),Asset Name(on Platform),Asset Maker(on Platform),License Type"};
+	vector<string> assets = {"Platform,Location(in Game),Use(in Game),Asset Name(on Platform),Asset Maker(on Platform),License Type\n"};
 
 	int OpenChances = 3;
 	int NewChances = 3;
@@ -363,56 +365,55 @@ void UpdateAsset(size_t index, vector<string>& assets)
 	
 }
 
-void UpdateAssets(vector<string>& assets, string fileName)
+void UpdateAssets(vector<string>& assets, const string& fileName)
 {
-	ifstream newFile(fileName);
-	string line;
-	while (!newFile.eof())
+	ifstream newFile(fileName + ".csv");
+	if (!newFile.is_open()) 
 	{
-		getline(newFile, line);
-
-		string assetInfo;
-		stringstream assetList(line);
-
-		size_t index = 0;
-		while (getline(assetList, assetInfo, '|'))
+		cerr << "Failed to open file: " << fileName << endl;
+		return;
+	}
+	else
+	{
+		string line;
+		assets.clear();
+		while (getline(newFile, line))
 		{
-			if (assets.size() <= index)
+			if (!line.empty() && line.back() == '\r') { line.pop_back(); }
+			assets.push_back(line);
+		}
+
+		if (!assets.empty())
+		{
+			cout << "\n\n\n";
+			Console::SetBackgroundColor(White);
+			Console::SetForegroundColor(Black);
+			cout << "------Results------";
+			Console::SetBackgroundColor(Black);
+			Console::SetForegroundColor(White);
+			cout << "\n\n";
+
+			int index = 0;
+			for (auto& asset : assets)
 			{
-				assets[index] = assetInfo;
+				if (index > 0) { cout << index << ": "; }
+				cout << asset << endl;
 				index++;
 			}
-			else
-			{
-				assets.push_back(assetInfo);
-			}
+
+			Console::SetForegroundColor(White);
+			cout << "\nWhich one is the problem?\n\n";
+			size_t problemIndex = Input::GetInteger("Answer:  ", 0, assets.size() - 1, LightGrey);
+
+			UpdateAsset(problemIndex, assets);
 		}
-	}
-
-	newFile.close();
-
-	if (!assets.empty())
-	{
-		cout << "\n \n \n";
-		Console::SetBackgroundColor(White);
-		Console::SetForegroundColor(Black);
-		cout << "------Results------";
-		Console::SetBackgroundColor(Black);
-		Console::SetForegroundColor(White);
-		cout << "\n \n";
-		for (auto& asset : assets)
+		else
 		{
-			cout << asset << endl;
+			cout << "-----CODE-BROKEN-----";
 		}
-		
-		Console::SetForegroundColor(White);
-		cout << "\nWhich one is the problem?\n\n";
-		size_t problemIndex = Input::GetInteger("Answer:  ", 0, assets.size(), LightGrey) - 1;
-
-		UpdateAsset(problemIndex, assets);
 	}
-	else { cout << "-----CODE-BROKEN-----"; }
 }
+
 
 void SaveAssetInfo(vector<string>& assets, string fileName)
 {
@@ -871,6 +872,8 @@ void SaveAssetInfo(vector<string>& assets, string fileName)
 
 		}
 	}
+
+	vector<string>& GetAssets() { return assets; }
 
 
 };

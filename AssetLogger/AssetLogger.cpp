@@ -33,6 +33,6 @@ int main()
 	{
 		AssetLogger.HandleAssetAdding();
 	}
-	else {}
+	else { AssetLogger.UpdateAssets(AssetLogger.GetAssets(), Input::GetString("File Name: ", White)); }
 }
 
