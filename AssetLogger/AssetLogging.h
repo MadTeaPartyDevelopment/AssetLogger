@@ -19,7 +19,7 @@ class AssetLogging
 {
 protected:
 	bool Demo = false;
-	vector<string> assets = {"Platform,Location(in Game),Use(in Game),Asset Name(on Platform),Asset Maker(on Platform),License Type\n"};
+	vector<string> assets = {"Platform,Location(in Project),Use(in Project),Asset Name(on Platform),Asset Maker(on Platform),License Type\n"};
 
 	int OpenChances = 3;
 	int NewChances = 3;
@@ -61,7 +61,7 @@ static void ShowLicense()
 	cout << "Copyright © Mad Tea Party Development 2025" << endl
 		<< endl
 		<< "This software is proprietary and may not be copied, modified, distributed, or used for commercial purposes without explicit permission from the author." << endl
-		<< "Demo version provided for evaluation only.Full version available at [Link To Be Added]."<< endl
+		<< "Demo version provided for evaluation only.Full version available now!"<< endl
 		<< endl
 		<< endl;
 }
@@ -129,8 +129,8 @@ void UpdateAsset(size_t index, vector<string>& assets)
 	if (!Demo)
 	{
 		string platform = Input::GetString("Platform: ", White);
-		string assetLocation = Input::GetString("Asset Location(in Game): ", White);
-		string assetUse = Input::GetString("Asset Use(in Game): ", White);
+		string assetLocation = Input::GetString("Asset Location(in Project): ", White);
+		string assetUse = Input::GetString("Asset Use(in Project): ", White);
 		string assetName = Input::GetString("Asset Name(on Platform): ", White);
 		string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
 		string licenseType = Input::GetString("License Type: ", White);
@@ -253,7 +253,7 @@ void UpdateAsset(size_t index, vector<string>& assets)
 	{
 		string platform = Input::GetString("Platform: ", White);
 
-		string assetUse = Input::GetString("Asset Use(in Game): ", White);
+		string assetUse = Input::GetString("Asset Use(in Project): ", White);
 		
 		string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
 
@@ -716,8 +716,8 @@ void SaveAssetInfo(vector<string>& assets, string fileName)
 		if (!Demo)
 		{
 			string platform = Input::GetString("Platform: ", White);
-			string assetLocation = Input::GetString("Asset Location(in Game): ", White);
-			string assetUse = Input::GetString("Asset Use(in Game): ", White);
+			string assetLocation = Input::GetString("Asset Location(in Project: ", White);
+			string assetUse = Input::GetString("Asset Use(in Project): ", White);
 			string assetName = Input::GetString("Asset Name(on Platform): ", White);
 			string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
 			string licenseType = Input::GetString("License Type: ", White);
@@ -777,7 +777,7 @@ void SaveAssetInfo(vector<string>& assets, string fileName)
 		{
 			string platform = Input::GetString("Platform: ", White);
 
-			string assetUse = Input::GetString("Asset Use(in Game): ", White);
+			string assetUse = Input::GetString("Asset Use(in Project): ", White);
 
 			string assetMaker = Input::GetString("Asset Maker(on Platform): ", White);
 
